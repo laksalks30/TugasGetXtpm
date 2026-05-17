@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../controller/cart_controller.dart';
 import '../../model/product.dart';
 
 class ProductDetailPage extends StatelessWidget {
@@ -8,14 +9,17 @@ class ProductDetailPage extends StatelessWidget {
   // Ambil data dari Get.arguments yang dikirim saat navigasi
   final Product product = Get.arguments as Product;
 
+  // Ambil CartController yang sudah didaftarkan secara global
+  final CartController cartController = Get.find<CartController>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, title: Text("Detail")),
+      appBar: AppBar(backgroundColor: Colors.white, title: const Text("Detail")),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(12),
+          padding: const EdgeInsets.all(12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -35,7 +39,7 @@ class ProductDetailPage extends StatelessWidget {
                             );
                           },
                           separatorBuilder: (context, index) =>
-                              SizedBox(width: 10),
+                              const SizedBox(width: 10),
                         )
                       : Card(
                           elevation: 3,
@@ -47,22 +51,28 @@ class ProductDetailPage extends StatelessWidget {
                         ),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Text(
                 product.title,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("\$${product.price}", style: TextStyle(fontSize: 16)),
+                  Text(
+                    "\$${product.price}",
+                    style: const TextStyle(fontSize: 16),
+                  ),
                   Text("⭐️ ${product.rating}"),
                 ],
               ),
               Text("Stock: ${product.stock}"),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Text(product.description, textAlign: TextAlign.justify),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -72,8 +82,8 @@ class ProductDetailPage extends StatelessWidget {
                       .toList(),
                 ),
               ),
-              SizedBox(height: 20),
-              Text(
+              const SizedBox(height: 20),
+              const Text(
                 "Reviews",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 19),
               ),
@@ -87,7 +97,7 @@ class ProductDetailPage extends StatelessWidget {
                     ),
                     trailing: Text(
                       "${review['rating']}⭐️",
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w500,
                       ),
@@ -97,6 +107,32 @@ class ProductDetailPage extends StatelessWidget {
                   );
                 }).toList(),
               ),
+              const SizedBox(height: 24),
+
+              // ── Tombol Tambahkan ke Keranjang ──
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton.icon(
+                  onPressed: () => cartController.addToCart(product),
+                  icon: const Icon(Icons.shopping_cart_outlined),
+                  label: const Text(
+                    'Tambahkan ke Keranjang',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blueGrey,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
             ],
           ),
         ),
@@ -104,3 +140,4 @@ class ProductDetailPage extends StatelessWidget {
     );
   }
 }
+
